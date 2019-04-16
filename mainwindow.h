@@ -25,6 +25,9 @@ private:
     int counter;
     const int maxCounter = 10;
     const int minCounter = -10;
+
+private:
+    void setUpChart();
 };
 
 #endif // MAINWINDOW_H
