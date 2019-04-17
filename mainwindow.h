@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <fpchart.h>
 
 namespace Ui {
 class MainWindow;
@@ -22,12 +23,10 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    int counter;
+    int counter = 0;
     const int maxCounter = 10;
     const int minCounter = -10;
-
-private:
-    void setUpChart();
+    FpChart *chart;
 };
 
 #endif // MAINWINDOW_H
