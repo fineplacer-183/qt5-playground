@@ -13,3 +13,7 @@ find_package(Qt5Charts CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME} main.cpp mainwindow.cpp fpchart.cpp)
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Charts)
+
+include(CTest)
+enable_testing()
+ADD_SUBDIRECTORY( tests )
