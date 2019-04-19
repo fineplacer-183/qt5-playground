@@ -8,11 +8,10 @@
 #include <QChartView>
 #include <QLineSeries>
 #include <QValueAxis>
-#include <QBarSet>
-#include <QHorizontalBarSeries>
 #include <QCategoryAxis>
 
 using namespace QtCharts;
+
 class FpChart : public QChartView
 {
   Q_OBJECT
@@ -22,16 +21,16 @@ public:
   ~FpChart();
 
 private:
-  QChartView *ui;
+  QChartView *ui = nullptr;
 
 private:
- QCategoryAxis *axisX;
- QCategoryAxis *axisY;
+ QCategoryAxis *axisX = nullptr;
+ QCategoryAxis *axisY = nullptr;
 
 private:
   QTimer chartTimer;
   QLineSeries *hotAirData = nullptr;
-  QChart *hotAirChart;
+  QChart *hotAirChart = nullptr;
 
 public:
   void addDataPoint(QPointF point);
@@ -39,11 +38,11 @@ public:
 private:
   void setUpChart();
 
-private slots:
-  void updateChart();
+// private slots:
+//   void updateChart();
 
-public slots:
-    void handleTimeout();
+// public slots:
+//     void handleTimeout();
 
 private:
   QBasicTimer timer;

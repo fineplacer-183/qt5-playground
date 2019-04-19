@@ -5,9 +5,6 @@ FpChart::FpChart(QChartView *parent)
 {
   ui = parent;
   setUpChart();
-  // chartTimer = new QTimer(this);
-  // connect(chartTimer, SIGNAL(timeout()), this, SLOT(updateChart()));
-  // chartTimer->start(1000);
 }
 
 FpChart::~FpChart()
@@ -118,12 +115,12 @@ void FpChart::setUpChart()
   ui->setRenderHint(QPainter::Antialiasing);
   ui->setChart(hotAirChart);
 
-  qsrand((uint) QTime::currentTime().msec());
+  // qsrand((uint) QTime::currentTime().msec());
 
-  QObject::connect(&chartTimer, &QTimer::timeout, this, &FpChart::handleTimeout);
-  chartTimer.setInterval(1000);
+  // QObject::connect(&chartTimer, &QTimer::timeout, this, &FpChart::handleTimeout);
+  // chartTimer.setInterval(1000);
   
-  chartTimer.start();
+  // chartTimer.start();
 }
 
 void FpChart::addDataPoint(QPointF dataPoint)
@@ -131,25 +128,24 @@ void FpChart::addDataPoint(QPointF dataPoint)
   hotAirData->append(dataPoint);
   qInfo() << __PRETTY_FUNCTION__  << " added Point: " << dataPoint <<
     " len now: " << hotAirData->count();
-  // updateChart();
 }
 
-void FpChart::updateChart()
-{
-  // hotAirChart->scroll(0, 0);
-  // ui->repaint();
-}
+// void FpChart::updateChart()
+// {
+//   // hotAirChart->scroll(0, 0);
+//   // ui->repaint();
+// }
 
-void FpChart::handleTimeout()
-{
-    // qreal x = hotAirChart->plotArea().width() / xAxis->tickCount();
-    qreal y = (axisX->max() - axisX->min()) / axisX->tickCount();
-    m_x += y;
-    m_y = qrand() % 5 - 2.5;
-    // hotAirData->append(m_x, m_y);
-    // hotAirChart->scroll(x, 0);
-    hotAirChart->update();
+// void FpChart::handleTimeout()
+// {
+//     // qreal x = hotAirChart->plotArea().width() / xAxis->tickCount();
+//     qreal y = (axisX->max() - axisX->min()) / axisX->tickCount();
+//     m_x += y;
+//     m_y = qrand() % 5 - 2.5;
+//     // hotAirData->append(m_x, m_y);
+//     // hotAirChart->scroll(x, 0);
+//     hotAirChart->update();
     
-    if (m_x == 100)
-        chartTimer.stop();
-}
+//     if (m_x == 100)
+//         chartTimer.stop();
+// }
