@@ -12,6 +12,9 @@ FpChart::FpChart(QChartView *parent)
 
 FpChart::~FpChart()
 {
+  delete axisX;
+  delete axisY;
+  delete hotAirChart;
   delete hotAirData;
 }
 
@@ -25,6 +28,7 @@ void FpChart::setUpChart()
   hotAirChart = new QChart();
   hotAirChart->legend()->hide();
   hotAirChart->addSeries(hotAirData);
+  hotAirData->append(0,0);
 
   // set pen for Series of dataSeriea
   QPen pen(QRgb(0xfdb157));
@@ -78,8 +82,8 @@ void FpChart::setUpChart()
   axisY->setLabelsBrush(axisBrush);
 
   // Customize grid lines and shades
-  axisX->setGridLineVisible(false);
-  axisY->setGridLineVisible(false);
+  axisX->setGridLineVisible(true);
+  axisY->setGridLineVisible(true);
   axisY->setShadesPen(Qt::NoPen);
   axisY->setShadesBrush(QBrush(QColor(0x99, 0xcc, 0xcc, 0x55)));
   axisY->setShadesVisible(true);  
@@ -90,10 +94,19 @@ void FpChart::setUpChart()
   // axisX->append("optimal", 20);
   // axisX->append("high", 30);
   axisX->setRange(0, 30);
+  axisX->setTickInterval(5);
+  axisX->setTickType(QValueAxis::TickType::TicksDynamic);
+  
 
   // axisY->append("slow", 10);
   // axisY->append("med", 20);
   // axisY->append("fast", 30);
+  axisY->append("-10", -10);
+  axisY->append("-5", -5);
+  axisY->append("0", 0);
+  axisY->append("5", 5);
+  axisY->append("10", 10);
+  axisX->setTickInterval(5);
   axisY->setRange(-10, 10);
 
   hotAirChart->addAxis(axisX, Qt::AlignBottom);
