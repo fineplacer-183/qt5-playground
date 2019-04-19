@@ -32,6 +32,7 @@ void MainWindow::whenButtonPlusIsClicked()
     ui->lcdNumber->display(++counter);
     ui->dial->setValue(counter);
   }
+  chart->addDataPoint(QPointF(changeCount++, counter));
 }
 
 void MainWindow::whenButtonMinusIsClicked()
@@ -42,6 +43,7 @@ void MainWindow::whenButtonMinusIsClicked()
     ui->lcdNumber->display(--counter);
     ui->dial->setValue(counter);
   }
+  chart->addDataPoint(QPointF(changeCount++, counter));
 }
 
 void MainWindow::whenDialIsTurned()
@@ -61,4 +63,6 @@ void MainWindow::whenDialIsTurned()
   }
 
   ui->lcdNumber->display(counter);
+
+  chart->addDataPoint(QPointF(changeCount++, counter));
 }

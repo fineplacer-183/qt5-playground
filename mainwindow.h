@@ -24,6 +24,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
     int counter = 0;
+    int changeCount = 0;
     const int maxCounter = 10;
     const int minCounter = -10;
     FpChart *chart;

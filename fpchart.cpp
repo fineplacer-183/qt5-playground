@@ -1,88 +1,142 @@
 #include "fpchart.h"
-#include <QDebug>
-#include <QChart>
-#include <QHorizontalBarSeries>
-#include <QBarCategoryAxis>
-#include <QValueAxis>
+#include <QTime>
 
-
-FpChart::FpChart(QChartView *parent) 
+FpChart::FpChart(QChartView *parent)
 {
   ui = parent;
   setUpChart();
-  chartTimer = new QTimer(this);
-  connect(chartTimer, SIGNAL(timeout()), this, SLOT(updateChart()));
-  chartTimer->start(1000);
+  // chartTimer = new QTimer(this);
+  // connect(chartTimer, SIGNAL(timeout()), this, SLOT(updateChart()));
+  // chartTimer->start(1000);
+}
+
+FpChart::~FpChart()
+{
+  delete hotAirData;
 }
 
 void FpChart::setUpChart()
 {
   using namespace QtCharts;
 
-  // The bar sets are used in the same way in all bar charts.
-  // To illustrate the difference between various bar charts,
-  // we use the same data in all examples. Data that bar chart visualizes,
-  // is defined by QBarSet instances. Here we create the sets and append data to them.
-  // The data is appended here with << operator.
-  // Alternatively, the append method could also be used.
-  set0 = new QBarSet("Jane");
-  set1 = new QBarSet("John");
-  set2 = new QBarSet("Axel");
-  set3 = new QBarSet("Mary");
-  set4 = new QBarSet("Samantha");
+  hotAirData = new QLineSeries();
+  
+  // To present the data on the chart we need a QChart instance. We add the series to it, create the default axes, and set the title of the chart.
+  hotAirChart = new QChart();
+  hotAirChart->legend()->hide();
+  hotAirChart->addSeries(hotAirData);
 
-  *set0 << 1 << 2 << 3 << 4 << 5 << 6;
-  *set1 << 5 << 0 << 0 << 4 << 0 << 7;
-  *set2 << 3 << 5 << 8 << 13 << 8 << 5;
-  *set3 << 5 << 6 << 7 << 3 << 4 << 5;
-  *set4 << 9 << 7 << 5 << 3 << 1 << 2;
+  // set pen for Series of dataSeriea
+  QPen pen(QRgb(0xfdb157));
+  pen.setWidth(5);
+  hotAirData->setPen(pen);
 
-  // We create the series and append the bar sets to it.
-  // The series takes ownership of the barsets.
-  // The series groups the data from sets to categories.
-  // The first values of each set are grouped together in the first category;
-  // the second values in the second category, and so on.
-  QHorizontalBarSeries *series = new QHorizontalBarSeries();
-  series->append(set0);
-  series->append(set1);
-  series->append(set2);
-  series->append(set3);
-  series->append(set4);
+  // customize chart title
+   QFont font;
+  font.setPixelSize(18);
+  hotAirChart->setTitleFont(font);
+  hotAirChart->setTitleBrush(QBrush(Qt::white));
+  hotAirChart->setTitle("Customchart example");
 
-  // Here we create the chart object and add the series to it.
-  // We set the title for chart with setTitle and then turn on
-  // animations of the series by calling setAnimationOptions(QChart::SeriesAnimations).
-  QChart *chart = new QChart();
-  chart->addSeries(series);
-  chart->setTitle("Simple horizontal barchart example");
-  chart->setAnimationOptions(QChart::SeriesAnimations);
+  // Customize chart background
+  QLinearGradient backgroundGradient;
+  backgroundGradient.setStart(QPointF(0, 0));
+  backgroundGradient.setFinalStop(QPointF(0, 1));
+  backgroundGradient.setColorAt(0.0, QRgb(0xd2d0d1));
+  backgroundGradient.setColorAt(1.0, QRgb(0x4c4547));
+  backgroundGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+  hotAirChart->setBackgroundBrush(backgroundGradient);
 
-  QStringList categories;
-  categories << "Jan"
-             << "Feb"
-             << "Mar"
-             << "Apr"
-             << "May"
-             << "Jun";
-  QBarCategoryAxis *axisY = new QBarCategoryAxis();
-  axisY->append(categories);
-  chart->addAxis(axisY, Qt::AlignLeft);
-  series->attachAxis(axisY);
-  QValueAxis *axisX = new QValueAxis();
-  chart->addAxis(axisX, Qt::AlignBottom);
-  series->attachAxis(axisX);
-  axisX->applyNiceNumbers();
+  // Customize plot area background
+  QLinearGradient plotAreaGradient;
+  plotAreaGradient.setStart(QPointF(0, 1));
+  plotAreaGradient.setFinalStop(QPointF(1, 0));
+  plotAreaGradient.setColorAt(0.0, QRgb(0x555555));
+  plotAreaGradient.setColorAt(1.0, QRgb(0x55aa55));
+  plotAreaGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+  hotAirChart->setPlotAreaBackgroundBrush(plotAreaGradient);
+  hotAirChart->setPlotAreaBackgroundVisible(true);
 
-  // We also want to show the legend. To do so, we get the legend pointer from chart
-  // and set it to visible. We also place the legend to the bottom of the chart by
-  // setting its alignment to Qt::AlignBottom.
-  chart->legend()->setVisible(true);
-  chart->legend()->setAlignment(Qt::AlignBottom);
+  // Then we customize the axes.
+  axisX = new QCategoryAxis();
+  axisY = new QCategoryAxis();
+  // Customize axis label font
+  QFont labelsFont;
+  labelsFont.setPixelSize(12);
+  axisX->setLabelsFont(labelsFont);
+  axisY->setLabelsFont(labelsFont);
 
+  // Customize axis colors
+  QPen axisPen(QRgb(0xd18952));
+  axisPen.setWidth(2);
+  axisX->setLinePen(axisPen);
+  axisY->setLinePen(axisPen);
+
+  // Customize axis label colors
+  QBrush axisBrush(Qt::white);
+  axisX->setLabelsBrush(axisBrush);
+  axisY->setLabelsBrush(axisBrush);
+
+  // Customize grid lines and shades
+  axisX->setGridLineVisible(false);
+  axisY->setGridLineVisible(false);
+  axisY->setShadesPen(Qt::NoPen);
+  axisY->setShadesBrush(QBrush(QColor(0x99, 0xcc, 0xcc, 0x55)));
+  axisY->setShadesVisible(true);  
+  
+  // Then the axis label values and ranges. 
+  // Once the axes are ready, we set them to be used by the chart.
+  // axisX->append("low", 10);
+  // axisX->append("optimal", 20);
+  // axisX->append("high", 30);
+  axisX->setRange(0, 30);
+
+  // axisY->append("slow", 10);
+  // axisY->append("med", 20);
+  // axisY->append("fast", 30);
+  axisY->setRange(-10, 10);
+
+  hotAirChart->addAxis(axisX, Qt::AlignBottom);
+  hotAirChart->addAxis(axisY, Qt::AlignLeft);
+  hotAirData->attachAxis(axisX);
+  hotAirData->attachAxis(axisY);
+  
+  
   ui->setRenderHint(QPainter::Antialiasing);
-  ui->setChart(chart);
+  ui->setChart(hotAirChart);
+
+  qsrand((uint) QTime::currentTime().msec());
+
+  QObject::connect(&chartTimer, &QTimer::timeout, this, &FpChart::handleTimeout);
+  chartTimer.setInterval(1000);
+  
+  chartTimer.start();
+}
+
+void FpChart::addDataPoint(QPointF dataPoint)
+{
+  hotAirData->append(dataPoint);
+  qInfo() << __PRETTY_FUNCTION__  << " added Point: " << dataPoint <<
+    " len now: " << hotAirData->count();
+  // updateChart();
 }
 
 void FpChart::updateChart()
 {
+  // hotAirChart->scroll(0, 0);
+  // ui->repaint();
+}
+
+void FpChart::handleTimeout()
+{
+    // qreal x = hotAirChart->plotArea().width() / xAxis->tickCount();
+    qreal y = (axisX->max() - axisX->min()) / axisX->tickCount();
+    m_x += y;
+    m_y = qrand() % 5 - 2.5;
+    // hotAirData->append(m_x, m_y);
+    // hotAirChart->scroll(x, 0);
+    hotAirChart->update();
+    
+    if (m_x == 100)
+        chartTimer.stop();
 }
