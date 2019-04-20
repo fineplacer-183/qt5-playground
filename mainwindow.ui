@@ -67,13 +67,15 @@
      <height>20</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menufpcommis">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>fpcommis</string>
+     <string>&amp;File</string>
     </property>
+    <addaction name="actionLoad_PAK_file"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
-   <addaction name="menufpcommis"/>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -85,10 +87,18 @@
   </widget>
   <action name="actionQuit">
    <property name="text">
-    <string>Quit</string>
+    <string>&amp;Quit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionLoad_PAK_file">
+   <property name="text">
+    <string>Load &amp;PAK file....</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+L</string>
    </property>
   </action>
  </widget>
