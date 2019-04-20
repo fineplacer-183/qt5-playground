@@ -20,10 +20,11 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5Widgets CONFIG REQUIRED)
 find_package(Qt5Charts CONFIG REQUIRED)
+find_package(ZLIB REQUIRED)
 
 
-add_executable(${PROJECT_NAME} main.cpp mainwindow.cpp fpchart.cpp)
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Charts)
+add_executable(${PROJECT_NAME} main.cpp mainwindow.cpp fpchart.cpp pakfile.cpp)
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Charts ${ZLIB_LIBRARIES})
 
 include(CTest)
 enable_testing()
