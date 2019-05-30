@@ -17,14 +17,20 @@ set(CMAKE_CXX_FLAGS "-Wall -Werror")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
-find_package(Qt5Widgets CONFIG REQUIRED)
-find_package(Qt5Charts CONFIG REQUIRED)
+SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build/libs)
+
+find_package(Qt5 COMPONENTS Core Widgets Charts REQUIRED)
 find_package(ZLIB REQUIRED)
 
+ADD_SUBDIRECTORY( fpchart )
+ADD_SUBDIRECTORY( pakfile )
 
-add_executable(${PROJECT_NAME} main.cpp mainwindow.cpp fpchart.cpp pakfile.cpp)
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Charts ${ZLIB_LIBRARIES})
+include_directories(fpchart pakfile)
+
+add_executable(${PROJECT_NAME} main.cpp mainwindow.cpp)
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Charts ${ZLIB_LIBRARIES} fpchart pakfile)
 
 include(CTest)
 enable_testing()
